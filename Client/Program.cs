@@ -52,7 +52,7 @@ public class Client
                     streamWriter.Flush();
                     outputString = streamReader.ReadLine();
                     streamWriter.Flush();
-                    Console.WriteLine(outputString);
+                    Console.WriteLine("Message received:{0}",outputString);
                     Console.WriteLine("type:");
                     str = Console.ReadLine();
                 }

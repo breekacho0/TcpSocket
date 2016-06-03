@@ -64,10 +64,9 @@ public class AsynchIOServer
             while (true)
             {
                 string theString = streamReader.ReadLine();
-                Console.WriteLine("Message recieved by client:" + theString);
+                Console.WriteLine("Message recieved by client:{0}   " + theString, socketForClient.RemoteEndPoint);
                 char[] delimiterChars = { ' ', ',', '.', ':', '\t','(',')',';' };
                 string[] commands = theString.Split(delimiterChars);
-                Console.WriteLine(commands[0]);
                 if (commands[0] == "vector")
                 {
                     int x=0, y=0;
@@ -77,28 +76,28 @@ public class AsynchIOServer
                         theString = "Vector length:" + length.ToString();
                     }
                     else theString = "Paramatres are not integer";
-                    streamWriter.WriteLine(theString);
-                    streamWriter.Flush();
                 }
                 if (commands[0] == "commands")
                 {
-                    streamWriter.WriteLine("exit/vector(a;b)/time");
-                    streamWriter.Flush();
+                    theString = "exit/vector(a;b)/time";
+                   
+                }
+                if (commands[0] == "time")
+                {
+                    DateTime date = DateTime.Now;
+                    theString = date.ToString();
                 }
                 if (commands[0] == "exit")
                     break;
-                streamWriter.WriteLine("server received:", theString);
+
+                streamWriter.WriteLine(theString);
                 streamWriter.Flush();
             }
             streamReader.Close();
             networkStream.Close();
             streamWriter.Close();
-            //}
-
         }
         socketForClient.Close();
-        Console.WriteLine("Press any key to exit from server program");
-        Console.ReadKey();
     }
    
     public static void Main()
@@ -106,8 +105,8 @@ public class AsynchIOServer
         //TcpListener tcpListener = new TcpListener(10);
         tcpListener.Start();
         Console.WriteLine("************This is Server program************");
-        Console.WriteLine("Hoe many clients are going to connect to this server?:");
-        int numberOfClientsYouNeedToConnect =int.Parse( Console.ReadLine());
+        Console.WriteLine("Server supports only 10 connections");
+        int numberOfClientsYouNeedToConnect = 10;
         for (int i = 0; i < numberOfClientsYouNeedToConnect; i++)
         {
             Thread newThread = new Thread(new ThreadStart(Listeners));
